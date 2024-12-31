@@ -1,0 +1,200 @@
+used_ios:
+  # Declare the 12 MHz clock pin as an input.
+  -
+    # This is the spot for pin 20 on the sg48 package.
+    spot:
+      tile: [19, 0]
+      which: 1
+    is_output: false
+
+  # Declare the LED output pin as an output.
+  -
+    # This is the spot for pin 41 on the sg48 package.
+    spot:
+      tile: [6, 31]
+      which: 0
+    is_output: true
+
+lut4s:
+  # Make a 24-bit counter out of 48 LUTs.
+  # The first 24 LUTs are the state, the second 24 LUTs are the carry chain.
+
+  # State LUTs:
+  # The state LUTs take as input (state[i], carry_in[i]).
+  # Therefore, the next state is the xor of these two, with table 0b0110.
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+  - {table: 0b0110, clock_domain: 7}
+
+  # Carry chain LUTs:
+  # The carry chain LUTs take as input (state[i-1], carry_in[i-1]).
+  # carry_out[i] is the and of these two, with table 0b100.
+  # The only exception is carry_in[0] which is always 1.
+  - {table: 0xffff, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+  - {table: 0b1000, clock_domain: null}
+
+wires:
+  # Hook up pin 20 to global clock network 7.
+  -
+    from:
+      type: Pin
+      tile: [19, 0]
+      which: 1
+    to:
+      # Each global clock network has a particular tile it
+      # ingresses at, and for network 7 it happens to be (19, 0).
+      type: GlobalNetIngress
+      tile: [19, 0]
+
+  # Feed each state LUT's output back to itself on input 0.
+  - {from: {type: Lut, lut_index:  0}, to: {type: Lut, lut_index:  0, input_index: 0}}
+  - {from: {type: Lut, lut_index:  1}, to: {type: Lut, lut_index:  1, input_index: 0}}
+  - {from: {type: Lut, lut_index:  2}, to: {type: Lut, lut_index:  2, input_index: 0}}
+  - {from: {type: Lut, lut_index:  3}, to: {type: Lut, lut_index:  3, input_index: 0}}
+  - {from: {type: Lut, lut_index:  4}, to: {type: Lut, lut_index:  4, input_index: 0}}
+  - {from: {type: Lut, lut_index:  5}, to: {type: Lut, lut_index:  5, input_index: 0}}
+  - {from: {type: Lut, lut_index:  6}, to: {type: Lut, lut_index:  6, input_index: 0}}
+  - {from: {type: Lut, lut_index:  7}, to: {type: Lut, lut_index:  7, input_index: 0}}
+  - {from: {type: Lut, lut_index:  8}, to: {type: Lut, lut_index:  8, input_index: 0}}
+  - {from: {type: Lut, lut_index:  9}, to: {type: Lut, lut_index:  9, input_index: 0}}
+  - {from: {type: Lut, lut_index: 10}, to: {type: Lut, lut_index: 10, input_index: 0}}
+  - {from: {type: Lut, lut_index: 11}, to: {type: Lut, lut_index: 11, input_index: 0}}
+  - {from: {type: Lut, lut_index: 12}, to: {type: Lut, lut_index: 12, input_index: 0}}
+  - {from: {type: Lut, lut_index: 13}, to: {type: Lut, lut_index: 13, input_index: 0}}
+  - {from: {type: Lut, lut_index: 14}, to: {type: Lut, lut_index: 14, input_index: 0}}
+  - {from: {type: Lut, lut_index: 15}, to: {type: Lut, lut_index: 15, input_index: 0}}
+  - {from: {type: Lut, lut_index: 16}, to: {type: Lut, lut_index: 16, input_index: 0}}
+  - {from: {type: Lut, lut_index: 17}, to: {type: Lut, lut_index: 17, input_index: 0}}
+  - {from: {type: Lut, lut_index: 18}, to: {type: Lut, lut_index: 18, input_index: 0}}
+  - {from: {type: Lut, lut_index: 19}, to: {type: Lut, lut_index: 19, input_index: 0}}
+  - {from: {type: Lut, lut_index: 20}, to: {type: Lut, lut_index: 20, input_index: 0}}
+  - {from: {type: Lut, lut_index: 21}, to: {type: Lut, lut_index: 21, input_index: 0}}
+  - {from: {type: Lut, lut_index: 22}, to: {type: Lut, lut_index: 22, input_index: 0}}
+  - {from: {type: Lut, lut_index: 23}, to: {type: Lut, lut_index: 23, input_index: 0}}
+  # Feed each carry chain LUT's output to the state LUT's input 1.
+  - {from: {type: Lut, lut_index: 24}, to: {type: Lut, lut_index:  0, input_index: 1}}
+  - {from: {type: Lut, lut_index: 25}, to: {type: Lut, lut_index:  1, input_index: 1}}
+  - {from: {type: Lut, lut_index: 26}, to: {type: Lut, lut_index:  2, input_index: 1}}
+  - {from: {type: Lut, lut_index: 27}, to: {type: Lut, lut_index:  3, input_index: 1}}
+  - {from: {type: Lut, lut_index: 28}, to: {type: Lut, lut_index:  4, input_index: 1}}
+  - {from: {type: Lut, lut_index: 29}, to: {type: Lut, lut_index:  5, input_index: 1}}
+  - {from: {type: Lut, lut_index: 30}, to: {type: Lut, lut_index:  6, input_index: 1}}
+  - {from: {type: Lut, lut_index: 31}, to: {type: Lut, lut_index:  7, input_index: 1}}
+  - {from: {type: Lut, lut_index: 32}, to: {type: Lut, lut_index:  8, input_index: 1}}
+  - {from: {type: Lut, lut_index: 33}, to: {type: Lut, lut_index:  9, input_index: 1}}
+  - {from: {type: Lut, lut_index: 34}, to: {type: Lut, lut_index: 10, input_index: 1}}
+  - {from: {type: Lut, lut_index: 35}, to: {type: Lut, lut_index: 11, input_index: 1}}
+  - {from: {type: Lut, lut_index: 36}, to: {type: Lut, lut_index: 12, input_index: 1}}
+  - {from: {type: Lut, lut_index: 37}, to: {type: Lut, lut_index: 13, input_index: 1}}
+  - {from: {type: Lut, lut_index: 38}, to: {type: Lut, lut_index: 14, input_index: 1}}
+  - {from: {type: Lut, lut_index: 39}, to: {type: Lut, lut_index: 15, input_index: 1}}
+  - {from: {type: Lut, lut_index: 40}, to: {type: Lut, lut_index: 16, input_index: 1}}
+  - {from: {type: Lut, lut_index: 41}, to: {type: Lut, lut_index: 17, input_index: 1}}
+  - {from: {type: Lut, lut_index: 42}, to: {type: Lut, lut_index: 18, input_index: 1}}
+  - {from: {type: Lut, lut_index: 43}, to: {type: Lut, lut_index: 19, input_index: 1}}
+  - {from: {type: Lut, lut_index: 44}, to: {type: Lut, lut_index: 20, input_index: 1}}
+  - {from: {type: Lut, lut_index: 45}, to: {type: Lut, lut_index: 21, input_index: 1}}
+  - {from: {type: Lut, lut_index: 46}, to: {type: Lut, lut_index: 22, input_index: 1}}
+  - {from: {type: Lut, lut_index: 47}, to: {type: Lut, lut_index: 23, input_index: 1}}
+
+  # Hook up each state LUT to the *next* carry chain LUT.
+  - {from: {type: Lut, lut_index:  0}, to: {type: Lut, lut_index: 25, input_index: 0}}
+  - {from: {type: Lut, lut_index:  1}, to: {type: Lut, lut_index: 26, input_index: 0}}
+  - {from: {type: Lut, lut_index:  2}, to: {type: Lut, lut_index: 27, input_index: 0}}
+  - {from: {type: Lut, lut_index:  3}, to: {type: Lut, lut_index: 28, input_index: 0}}
+  - {from: {type: Lut, lut_index:  4}, to: {type: Lut, lut_index: 29, input_index: 0}}
+  - {from: {type: Lut, lut_index:  5}, to: {type: Lut, lut_index: 30, input_index: 0}}
+  - {from: {type: Lut, lut_index:  6}, to: {type: Lut, lut_index: 31, input_index: 0}}
+  - {from: {type: Lut, lut_index:  7}, to: {type: Lut, lut_index: 32, input_index: 0}}
+  - {from: {type: Lut, lut_index:  8}, to: {type: Lut, lut_index: 33, input_index: 0}}
+  - {from: {type: Lut, lut_index:  9}, to: {type: Lut, lut_index: 34, input_index: 0}}
+  - {from: {type: Lut, lut_index: 10}, to: {type: Lut, lut_index: 35, input_index: 0}}
+  - {from: {type: Lut, lut_index: 11}, to: {type: Lut, lut_index: 36, input_index: 0}}
+  - {from: {type: Lut, lut_index: 12}, to: {type: Lut, lut_index: 37, input_index: 0}}
+  - {from: {type: Lut, lut_index: 13}, to: {type: Lut, lut_index: 38, input_index: 0}}
+  - {from: {type: Lut, lut_index: 14}, to: {type: Lut, lut_index: 39, input_index: 0}}
+  - {from: {type: Lut, lut_index: 15}, to: {type: Lut, lut_index: 40, input_index: 0}}
+  - {from: {type: Lut, lut_index: 16}, to: {type: Lut, lut_index: 41, input_index: 0}}
+  - {from: {type: Lut, lut_index: 17}, to: {type: Lut, lut_index: 42, input_index: 0}}
+  - {from: {type: Lut, lut_index: 18}, to: {type: Lut, lut_index: 43, input_index: 0}}
+  - {from: {type: Lut, lut_index: 19}, to: {type: Lut, lut_index: 44, input_index: 0}}
+  - {from: {type: Lut, lut_index: 20}, to: {type: Lut, lut_index: 45, input_index: 0}}
+  - {from: {type: Lut, lut_index: 21}, to: {type: Lut, lut_index: 46, input_index: 0}}
+  - {from: {type: Lut, lut_index: 22}, to: {type: Lut, lut_index: 47, input_index: 0}}
+  # Hook up Each carry chain LUT to the *next* carry chain LUT.
+  - {from: {type: Lut, lut_index: 24}, to: {type: Lut, lut_index: 25, input_index: 1}}
+  - {from: {type: Lut, lut_index: 25}, to: {type: Lut, lut_index: 26, input_index: 1}}
+  - {from: {type: Lut, lut_index: 26}, to: {type: Lut, lut_index: 27, input_index: 1}}
+  - {from: {type: Lut, lut_index: 27}, to: {type: Lut, lut_index: 28, input_index: 1}}
+  - {from: {type: Lut, lut_index: 28}, to: {type: Lut, lut_index: 29, input_index: 1}}
+  - {from: {type: Lut, lut_index: 29}, to: {type: Lut, lut_index: 30, input_index: 1}}
+  - {from: {type: Lut, lut_index: 30}, to: {type: Lut, lut_index: 31, input_index: 1}}
+  - {from: {type: Lut, lut_index: 31}, to: {type: Lut, lut_index: 32, input_index: 1}}
+  - {from: {type: Lut, lut_index: 32}, to: {type: Lut, lut_index: 33, input_index: 1}}
+  - {from: {type: Lut, lut_index: 33}, to: {type: Lut, lut_index: 34, input_index: 1}}
+  - {from: {type: Lut, lut_index: 34}, to: {type: Lut, lut_index: 35, input_index: 1}}
+  - {from: {type: Lut, lut_index: 35}, to: {type: Lut, lut_index: 36, input_index: 1}}
+  - {from: {type: Lut, lut_index: 36}, to: {type: Lut, lut_index: 37, input_index: 1}}
+  - {from: {type: Lut, lut_index: 37}, to: {type: Lut, lut_index: 38, input_index: 1}}
+  - {from: {type: Lut, lut_index: 38}, to: {type: Lut, lut_index: 39, input_index: 1}}
+  - {from: {type: Lut, lut_index: 39}, to: {type: Lut, lut_index: 40, input_index: 1}}
+  - {from: {type: Lut, lut_index: 40}, to: {type: Lut, lut_index: 41, input_index: 1}}
+  - {from: {type: Lut, lut_index: 41}, to: {type: Lut, lut_index: 42, input_index: 1}}
+  - {from: {type: Lut, lut_index: 42}, to: {type: Lut, lut_index: 43, input_index: 1}}
+  - {from: {type: Lut, lut_index: 43}, to: {type: Lut, lut_index: 44, input_index: 1}}
+  - {from: {type: Lut, lut_index: 44}, to: {type: Lut, lut_index: 45, input_index: 1}}
+  - {from: {type: Lut, lut_index: 45}, to: {type: Lut, lut_index: 46, input_index: 1}}
+  - {from: {type: Lut, lut_index: 46}, to: {type: Lut, lut_index: 47, input_index: 1}}
+
+  # Hook up the counter's last state bit to the LED output pin.
+  -
+    from:
+      type: Lut
+      lut_index: 23
+    to:
+      type: Pin
+      tile: [6, 31]
+      which: 0
