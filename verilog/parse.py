@@ -9,15 +9,15 @@ port_mapping = {
 port_is_output = {}
 
 with open("output.json") as f:
-    data = json.load(f)
+    json_data = json.load(f)
 luts = []
 net_number_to_from_spot = {}
-for port, port_data in data["modules"]["top"]["ports"].items():
+for port, port_data in json_data["modules"]["top"]["ports"].items():
     port_is_output[port] = port_data["direction"] == "output"
     bit, = port_data["bits"]
     if not port_is_output[port]:
         net_number_to_from_spot[bit] = port_mapping[port]
-for k, v in data["modules"]["top"]["cells"].items():
+for k, v in json_data["modules"]["top"]["cells"].items():
     if v["type"] == "SB_DFF":
         clock, = v["connections"]["C"]
         data, = v["connections"]["D"]
@@ -53,7 +53,17 @@ output = {
         for port in port_mapping
     ],
     "lut4s": [],
-    "wires": [],
+    "wires": [{
+        "from": {
+            "type": "Pin",
+            "tile": [19, 0],
+            "which": 1,
+        },
+        "to": {
+            "type": "GlobalNetIngress",
+            "tile": [19, 0],
+        },
+    }],
 }
 for lut in luts:
     if lut[0] == "dff":
@@ -86,6 +96,12 @@ for lut in luts:
                     "input_index": i,
                 },
             })
+# Hook up outputs.
+for port, port_data in json_data["modules"]["top"]["ports"].items():
+    port_is_output[port] = port_data["direction"] == "output"
+    bit, = port_data["bits"]
+    if port_is_output[port]:
+        output["wires"].append({"from": net_number_to_from_spot[bit], "to": port_mapping[port]})
 
 with open("out.yaml", "w") as f:
     yaml.dump(output, f)
