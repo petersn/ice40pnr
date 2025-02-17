@@ -49,7 +49,7 @@ lut4s:
 
   # Carry chain LUTs:
   # The carry chain LUTs take as input (state[i-1], carry_in[i-1]).
-  # carry_out[i] is the and of these two, with table 0b100.
+  # carry_out[i] is the and of these two, with table 0b1000.
   # The only exception is carry_in[0] which is always 1.
   - {table: 0xffff, clock_domain: null}
   - {table: 0b1000, clock_domain: null}
